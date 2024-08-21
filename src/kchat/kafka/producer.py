@@ -13,6 +13,7 @@ start = time.time()
 
 for i in range(10):
     data = { 'str': 'value' + str(i) }
+    # topic name: 'topic1'
     producer.send('topic1', value=data)
     producer.flush()
 
