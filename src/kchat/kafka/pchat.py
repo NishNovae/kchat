@@ -1,12 +1,14 @@
 # src/kchat/kafka/pchat
 
 from kafka import KafkaProducer
-from json import dumps
+#from json import dumps, loads
+import json
 import time
 
 p = KafkaProducer(
-    # TODO
-
+    # 'chat',
+    bootstrap_servers = ['localhost:9092'],
+    value_serializer = lambda x: json.dumps(x).encode('utf-8')
 )
 
 print("Beginning CHAT - SENDER")
@@ -17,7 +19,11 @@ while True:
     if msg == 'exit':
         break
     data = {'message': msg, 'time': time.time()}
-   
-    # TODO
- 
+    p.send('chatting', value=data)   
+    p.flush()
+    time.sleep(1)
+
+end = time.time()
 print("Ending CHAT...")
+print("[DONE]:", end - start)
+

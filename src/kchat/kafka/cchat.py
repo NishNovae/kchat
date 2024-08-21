@@ -4,12 +4,12 @@ from kafka import KafkaConsumer
 from json import loads
 
 consumer = KafkaConsumer(
-    'chat',
+    'chatting',
     bootstrap_servers=['localhost:9092'],
     auto_offset_reset='earliest',
     enable_auto_commit=True,
     group_id='chat_group',
-    value_deserializer= lambda x: laods(x.decode('utf-8'))
+    value_deserializer= lambda x: loads(x.decode('utf-8'))
 )
 
 print("Beginning CHAT - Receiving Messages")
