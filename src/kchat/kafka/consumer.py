@@ -16,6 +16,7 @@ def read_offset():
             return int(file.read().strip())
     return None
 
+saved_offset = read_offset()
 
 consumer = KafkaConsumer(
 #    'topic1',
@@ -25,18 +26,20 @@ consumer = KafkaConsumer(
     consumer_timeout_ms = 5000,
     auto_offset_reset='earliest' if read_offset() is None else 'none',
     group_id = 'fbi',
-    enable_auto_commit=True
+    enable_auto_commit=False
 )
 
 print('[START] get consumer')
 
-saved_offset = read_offset()
+p = TopicPartition('topic1', 0)
+consumer.assign([p])
+
 if saved_offset is not None:
-    p = TopicPartition('topic1', 0)
-    consumer.assign([p])    # assign partition
+#    p = TopicPartition('topic1', 0)
+#    consumer.assign([p])    # assign partition
     consumer.seek(p, saved_offset)
-
-
+else:
+    consumer.seek_to_beginning(p)
 
 for  m in consumer:
     print(f"offset={m.offset}, value={m.value}")
